@@ -1,13 +1,16 @@
 <?php
-/*
-Plugin Name: Product Shipping Methods
-Description: A custom plugin to assign different shipping methods to products in WooCommerce and add local pickup addresses.
-Version: 1.0
-Author: Byron Jacobs
-Author URI: https://byronjacobs.co.za
-License: GPLv2 or later
-Text Domain: product-shipping-methods
-*/
+
+/**
+ * Plugin Name: WooCommerce Shipping Methods For Products
+ * Description: A custom WooCommerce plugin to assign different shipping methods to products and add local pickup addresses.
+ * Version: 1.1
+ * Author: Byron Jacobs
+ * Author URI: https://byronjacobs.co.za
+ * License: GPLv2 or later
+ * Text Domain: product-shipping-methods
+ *
+ * This plugin adds the ability to assign specific shipping methods to products in WooCommerce. It also allows adding local pickup addresses for each Local Pickup shipping method. The available shipping methods for a cart will be filtered based on the selected shipping methods of the products in the cart. The local pickup addresses will be displayed in the customer's order confirmation email.
+ */
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
@@ -30,7 +33,11 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
         );
     }
 
-    // Meta box callback
+    /**
+     * Meta box callback to display the shipping methods for a product.
+     *
+     * @param WP_Post $post The post object.
+     */
     function psm_shipping_methods_metabox_callback($post)
     {
         $shipping_zones = WC_Shipping_Zones::get_zones();
@@ -69,8 +76,6 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
     </style>';
     }
 
-
-
     // Save custom field value
     add_action('save_post', 'psm_save_shipping_methods_meta', 10, 2);
     function psm_save_shipping_methods_meta($post_id, $post)
@@ -82,7 +87,6 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
         if (!isset($_POST['psm_shipping_methods_nonce']) || !wp_verify_nonce($_POST['psm_shipping_methods_nonce'], 'psm_save_shipping_methods_meta')) {
             return;
         }
-
         if ('product' !== $post->post_type) {
             return;
         }
